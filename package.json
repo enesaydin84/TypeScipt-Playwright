@@ -7,7 +7,14 @@
     "test": "tests"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "playwright test",
+    "test:headed": "playwright test --headed",
+    "test:ui": "playwright test --ui",
+    "test:debug": "playwright test --debug",
+    "test:ci": "cross-env CI=true playwright test",
+    "report": "playwright show-report",
+    "lint": "eslint 'src/**/*.{ts,js}' 'tests/**/*.{ts,js}'",
+    "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
@@ -15,6 +22,7 @@
   "devDependencies": {
     "@playwright/test": "^1.57.0",
     "@types/node": "^25.0.8",
+    "cross-env": "^10.1.0",
     "dotenv": "^17.2.3",
     "typescript": "^5.9.3"
   }
