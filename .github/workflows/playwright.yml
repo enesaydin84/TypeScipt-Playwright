@@ -32,8 +32,8 @@ jobs:
     # 5. Start the Dummy App (Background Process)
     # Since we don't have a real staging URL yet, we boot up the local HTML file in CI.
     # The '&' runs it in the background so the next step can proceed.
-    - name: Start Local Server
-      run: npx http-server -p 8080 &
+    #- name: Start Local Server
+    #  run: npx http-server -p 8080 &
 
     # 6. Run Playwright Tests
     # We manually inject the BASE_URL here because .env files are gitignored.
