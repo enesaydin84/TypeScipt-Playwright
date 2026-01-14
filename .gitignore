@@ -1,0 +1,21 @@
+# Dependencies
+node_modules/
+/dist
+
+# Playwright Test Artifacts
+test-results/
+playwright-report/
+blob-report/
+playwright/.cache/
+
+# Environment Variables (Security Risk: NEVER commit secrets!)
+.env
+config/.env.*
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Editor directories
+.idea/
+.vscode/
