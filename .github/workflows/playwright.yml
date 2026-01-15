@@ -1,23 +1,16 @@
 name: Playwright Tests
-permissions:
-  contents: write # Required to push the report to the branch
-  pages: write
-  id-token: write
+
 on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
   schedule:
-    # 15 = Minute (15 past)
-    # 8  = Hour (8 AM UTC)
-    # * = Every day
-    - cron: '15 8 * * *'
-    
+    - cron: '15 8 * * *' # 11:15 AM Istanbul Time
   workflow_dispatch:
 
-# Trigger: Run on push to main or any pull request
-#on:
-#  push:
-#    branches: [ main, master ]
-#  pull_request:
-#    branches: [ main, master ]
+permissions:
+  contents: write
 
 jobs:
   test:
@@ -25,89 +18,35 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    # 1. Get the code
     - uses: actions/checkout@v4
 
-    # 2. Install Node.js
+    # Optimization: Cache NPM packages
     - uses: actions/setup-node@v4
       with:
         node-version: 18
-        cache: 'npm'  #--Caching (Drastically Increases Speed)
+        cache: 'npm'
 
-    # 3. Install Dependencies (package.json)
     - name: Install dependencies
       run: npm ci
 
-# --- NEW STEP: STATIC ANALYSIS ---  "Fail Fast" Checks (Saves Money)
-    - name: Run Lint & Type Check
+    # Quality Gate: Fail fast if code is messy
+    - name: Lint Check
       run: npm run lint
 
-    # 4. Install Playwright Browsers
     - name: Install Playwright Browsers
       run: npx playwright install --with-deps
 
-    # 5. Start the Dummy App (Background Process)
-    # Since we don't have a real staging URL yet, we boot up the local HTML file in CI.
-    # The '&' runs it in the background so the next step can proceed.
-    #- name: Start Local Server
-    #  run: npx http-server -p 8080 &
-
-    # 6. Run Playwright Tests
-    # We manually inject the BASE_URL here because .env files are gitignored.
     - name: Run Playwright tests
       run: npx playwright test
       env:
-        # This overrides the missing config/.env.dev file
-        BASE_URL: 'http://localhost:8080'
-        ENV: 'ci'
+        # If you set secrets in GitHub, map them here:
+        # PASSWORD: ${{ secrets.PASSWORD }}
+        CI: true
 
-    # 7. Upload Report (Only if tests fail)
-    # This lets you download the HTML report from GitHub to debug failures.
+    # Reporting: Upload Artifact (Backup)
     - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
-
-    # ... previous steps (Install, Run Tests, Upload Artifact) ...
-
-    # NEW STEP: Send Email Notification
-    - name: Send Email Notification
-      uses: dawidd6/action-send-mail@v3
-      if: always() # Ensure this runs even if tests fail
-      with:
-        # SMTP Settings (Example for Gmail)
-        server_address: smtp.gmail.com
-        server_port: 465
-        secure: true
-        
-        # Who is sending it? (Read from Secrets)
-        username: ${{ secrets.MAIL_USERNAME }}
-        password: ${{ secrets.MAIL_PASSWORD }}
-        
-        # Email Details
-        subject: "Playwright Test Result: ${{ job.status }}"
-        to: ${{ secrets.MAIL_TO }}
-        from: "GitHub Actions Bot <${{ secrets.MAIL_USERNAME }}>"
-        
-        # Email Body
-        # We include the link to the specific "Run" so you can click and see logs.
-        body: |
-          The automated test run has completed.
-          
-          Status: ${{ job.status }}
-          Branch: ${{ github.ref_name }}
-          Commit: ${{ github.sha }}
-          
-          View the full report and logs here:
-          ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-
-
-    - name: Deploy Report to GitHub Pages
-      if: always()
-      uses: peaceiris/actions-gh-pages@v3
-      with:
-        github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: ./playwright-report
-        keep_files: true # Keeps history of previous runs!
