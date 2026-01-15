@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <h1>User Settings</h1>
+    <label>
+        <input type="checkbox" id="notifications-toggle"> Enable Notifications
+    </label>
+    <br><br>
+    <button id="save-btn">Save Changes</button>
+
+    <div id="message" style="display:none; color: green;">Settings Saved!</div>
+
+    <script>
+        // Simulate saving
+        document.getElementById('save-btn').addEventListener('click', () => {
+            setTimeout(() => {
+                document.getElementById('message').style.display = 'block';
+            }, 200);
+        });
+    </script>
+</body>
+</html>
