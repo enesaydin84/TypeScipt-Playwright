@@ -1,1 +1,15 @@
-// Placeholder content
+{
+    "root": true,
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["@typescript-eslint", "playwright"],
+    "extends": [
+      "eslint:recommended",
+      "plugin:@typescript-eslint/recommended",
+      "plugin:playwright/recommended"
+    ],
+    "rules": {
+      "no-console": "warn",
+      "playwright/no-focused-test": "error", 
+      "playwright/no-skipped-test": "warn"
+    }
+  }
