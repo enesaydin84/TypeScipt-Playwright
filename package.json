@@ -13,13 +13,14 @@
     "test:debug": "playwright test --debug",
     "test:ci": "cross-env CI=true playwright test",
     "report": "playwright show-report",
-    "lint": "eslint 'src/**/*.{ts,js}' 'tests/**/*.{ts,js}'",
+    "lint": "eslint src tests",
     "format": "prettier --write ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "@eslint/js": "^9.39.2",
     "@playwright/test": "^1.57.0",
     "@types/node": "^25.0.8",
     "@typescript-eslint/eslint-plugin": "^8.53.0",
@@ -28,6 +29,8 @@
     "dotenv": "^17.2.3",
     "eslint": "^9.39.2",
     "eslint-plugin-playwright": "^2.5.0",
-    "typescript": "^5.9.3"
+    "globals": "^17.0.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.53.0"
   }
 }
