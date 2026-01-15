@@ -1,5 +1,8 @@
 name: Playwright Tests
-
+permissions:
+  contents: write # Required to push the report to the branch
+  pages: write
+  id-token: write
 on:
   schedule:
     # 15 = Minute (15 past)
@@ -29,10 +32,15 @@ jobs:
     - uses: actions/setup-node@v4
       with:
         node-version: 18
+        cache: 'npm'  #--Caching (Drastically Increases Speed)
 
     # 3. Install Dependencies (package.json)
     - name: Install dependencies
       run: npm ci
+
+# --- NEW STEP: STATIC ANALYSIS ---  "Fail Fast" Checks (Saves Money)
+    - name: Run Lint & Type Check
+      run: npm run lint
 
     # 4. Install Playwright Browsers
     - name: Install Playwright Browsers
@@ -94,3 +102,12 @@ jobs:
           
           View the full report and logs here:
           ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+
+    - name: Deploy Report to GitHub Pages
+        if: always()
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./playwright-report
+        keep_files: true # Keeps history of previous runs!
