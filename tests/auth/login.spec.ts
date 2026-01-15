@@ -20,7 +20,7 @@ test.describe('Authentication Scenario', () => {
         
         // Note: In a real app, you'd match the actual error text.
         // For this template, we just check if any error appeared.
-        console.log(`Error message received: ${errorText}`);
+        //console.log(`Error message received: ${errorText}`);
         expect(errorText).toBeTruthy(); 
     });
 

@@ -45,7 +45,7 @@ export class LoginPage extends BasePage {
             // Wait up to 5 seconds for the error to appear (handling the 500ms delay)
             await this.errorMessage.waitFor({ state: 'visible', timeout: 5000 });
             return await this.errorMessage.textContent();
-        } catch (error) {
+        } catch  {
             // If it never appears, return null
             return null;
         }

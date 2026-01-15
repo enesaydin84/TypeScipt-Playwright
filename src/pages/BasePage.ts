@@ -1,4 +1,4 @@
-import { type Page, type Locator, type Response } from '@playwright/test';
+import { type Page, type Response } from '@playwright/test';
 
 /**
  * Abstract Class: BasePage
@@ -84,7 +84,7 @@ export abstract class BasePage {
      */
     async acceptDialog() {
         this.page.once('dialog', async (dialog) => {
-            console.log(`Accepted Dialog: ${dialog.message()}`);
+            //console.log(`Accepted Dialog: ${dialog.message()}`);
             await dialog.accept();
         })
     }

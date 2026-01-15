@@ -26,7 +26,7 @@ export class SettingsPage extends BasePage{
         await this.saveButton.click();
     }
 
-    async getSuccessText(): Promise<String>{
+    async getSuccessText(): Promise<string>{
         await this.successMessage.waitFor({state:'visible'});
         return (await this.successMessage.textContent() || '');
     }
