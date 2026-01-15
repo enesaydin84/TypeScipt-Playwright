@@ -61,3 +61,36 @@ jobs:
         name: playwright-report
         path: playwright-report/
         retention-days: 30
+
+    # ... previous steps (Install, Run Tests, Upload Artifact) ...
+
+    # NEW STEP: Send Email Notification
+    - name: Send Email Notification
+      uses: dawidd6/action-send-mail@v3
+      if: always() # Ensure this runs even if tests fail
+      with:
+        # SMTP Settings (Example for Gmail)
+        server_address: smtp.gmail.com
+        server_port: 465
+        secure: true
+        
+        # Who is sending it? (Read from Secrets)
+        username: ${{ secrets.MAIL_USERNAME }}
+        password: ${{ secrets.MAIL_PASSWORD }}
+        
+        # Email Details
+        subject: "Playwright Test Result: ${{ job.status }}"
+        to: ${{ secrets.MAIL_TO }}
+        from: "GitHub Actions Bot <${{ secrets.MAIL_USERNAME }}>"
+        
+        # Email Body
+        # We include the link to the specific "Run" so you can click and see logs.
+        body: |
+          The automated test run has completed.
+          
+          Status: ${{ job.status }}
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          
+          View the full report and logs here:
+          ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}

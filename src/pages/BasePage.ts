@@ -51,4 +51,49 @@ export abstract class BasePage {
     async getTitle(): Promise<string> {
         return await this.page.title();
     }
+
+    /**
+     * 1. Refresh the page.
+     * Essential for: Resetting the UI state or recovering from a stuck loader.
+     */
+    async reload() {
+        await this.page.reload({waitUntil:'domcontentloaded'});
+    }
+
+    /**
+     * 2. Browser Navigation (Back/Forward).
+     * Essential for: Testing browser history scenarios.
+     */
+    async goBack(){
+        await this.page.goBack({waitUntil:'domcontentloaded'});
+    }
+
+    /**
+     * 3. Take a Screenshot (On Demand).
+     * Essential for: Custom reporting or capturing evidence at specific steps.
+     * Note: Playwright does this automatically on failure, but sometimes you want it manually.
+     */
+    async takeScreenshot(name: string){
+        await this.page.screenshot({path: `test-results/screenshots/${name}.png`});
+    }
+
+    /**
+     * 4. Handle "Confirm" or "Alert" dialogs.
+     * Essential for: Pages that pop up "Are you sure?" windows.
+     * Usage: Call this BEFORE the action that triggers the alert.
+     */
+    async acceptDialog() {
+        this.page.once('dialog', async (dialog) => {
+            console.log(`Accepted Dialog: ${dialog.message()}`);
+            await dialog.accept();
+        })
+    }
+
+    /**
+     * 5. Global Keyboard Shortcuts.
+     * Essential for: Closing modals (Escape) or submitting forms (Enter) globally.
+     */
+    async pressKey(key: 'Enter' | 'Escape' | 'Tab' | 'ArrowDown') {
+        await this.page.keyboard.press(key);
+    }
 }
