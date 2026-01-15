@@ -1,11 +1,20 @@
 name: Playwright Tests
 
-# Trigger: Run on push to main or any pull request
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
+  schedule:
+    # 15 = Minute (15 past)
+    # 8  = Hour (8 AM UTC)
+    # * = Every day
+    - cron: '15 8 * * *'
+    
+  workflow_dispatch:
+
+# Trigger: Run on push to main or any pull request
+#on:
+#  push:
+#    branches: [ main, master ]
+#  pull_request:
+#    branches: [ main, master ]
 
 jobs:
   test:
